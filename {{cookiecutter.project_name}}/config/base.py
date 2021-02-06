@@ -1,13 +1,9 @@
 """添加各环境公用配置"""
 from utils.env import os, Env
 from config.settings import *
-{%- if cookiecutter.use_grappelli.lower() == 'y' %}
 from config.common.grappelli.config import *
 from config.common.filebrowser import *
-{%- endif %}
-{%- if cookiecutter.use_drf.lower() == 'y' %}
 from config.common.drf import *
-{%- endif %}
 {%- if cookiecutter.use_celery.lower() == 'y' %}
 from config.common.celery import *
 {%- endif %}
@@ -30,11 +26,9 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
-    {%- if cookiecutter.use_grappelli.lower() == 'y' %}
     'grappelli.dashboard',
     'grappelli',
     'filebrowser',
-    {%- endif %}
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',
@@ -51,16 +45,12 @@ INSTALLED_APPS += [
     {%- if cookiecutter.use_mdeditor.lower() == 'y' %}
     'mdeditor',
     {%- endif %}
-    {%- if cookiecutter.use_drf.lower() == 'y' %}
     'rest_framework',
     'rest_framework_jwt',
-    {%- endif %}
     {%- if cookiecutter.use_celery.lower() == 'y' %}
     'django_celery_beat',
     {%- endif %}
-    {%- if cookiecutter.use_grappelli.lower() == 'y' %}
     'django.contrib.sites',
-    {%- endif %}
     {%- if cookiecutter.use_demo.lower() == 'y' %}
     'mptt',
     {%- endif %}
@@ -68,9 +58,7 @@ INSTALLED_APPS += [
 
 INSTALLED_APPS += [
     # 自研应用
-    {%- if cookiecutter.use_account.lower() == 'y' %}
     'account.apps.AccountConfig',
-    {%- endif %}
     {%- if cookiecutter.use_demo.lower() == 'y' %}
     'demo.apps.ProjectConfig',
     {%- endif %}
@@ -78,14 +66,10 @@ INSTALLED_APPS += [
 
 SECRET_KEY = env.get('SECRET_KEY')
 
-{% if cookiecutter.use_grappelli.lower() == 'y' %}
 SITE_ID = 1
-{% endif %}
 
-{%- if cookiecutter.use_account.lower() == 'y' %}
 # 自定义用户模型
 AUTH_USER_MODEL = 'account.User'
-{%- endif %}
 
 # 静态资源路径
 STATIC_ROOT = os.path.join(BASE_DIR, 'statics')

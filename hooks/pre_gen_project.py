@@ -1,51 +1,167 @@
+"""
+                                 __
+                                /  |
+  _______   _______         ____$$ |     __   ______   _______    ______    ______
+ /       | /       |       /    $$ |    /  | /      \ /       \  /      \  /      \\
+/$$$$$$$/ /$$$$$$$/       /$$$$$$$ |    $$/  $$$$$$  |$$$$$$$  |/$$$$$$  |/$$$$$$  |
+$$ |      $$ |            $$ |  $$ |    /  | /    $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |
+$$ \_____ $$ \_____       $$ \__$$ |    $$ |/$$$$$$$ |$$ |  $$ |$$ \__$$ |$$ \__$$ |
+$$       |$$       |      $$    $$ |    $$ |$$    $$ |$$ |  $$ |$$    $$ |$$    $$/
+ $$$$$$$/  $$$$$$$/        $$$$$$$/__   $$ | $$$$$$$/ $$/   $$/  $$$$$$$ | $$$$$$/
+                                  /  \__$$ |                    /  \__$$ |
+                                  $$    $$/                     $$    $$/
+                                   $$$$$$/                       $$$$$$/
+"""
+
 import re
+import subprocess
 import sys
-from subprocess import check_call
 
 
-class GenericHooks(object):
-    TERMINATOR = "\x1b[0m"
-    WARNING = "\x1b[1;33m [WARNING]: "
-    INFO = "\x1b[1;33m [INFO]: "
-    HINT = "\x1b[3;33m"
-    SUCCESS = "\x1b[1;32m [SUCCESS]: "
+class ColorSchema(object):
+    """
+    基于 shell 的配色方案
+    """
+    TERMINATOR = "\033[0m"  # 统一终止符
+
+    FONT_RED = "\033[31m"
+    FONT_GREEN = "\033[32m"
+    FONT_YELLOW = "\033[33m"
+    FONT_BLUE = "\033[34m"
+    FONT_VIOLET = "\033[35m"
+    FONT_SKY_BLUE = "\033[36m"
+
+    BG_RED = "\033[41m"
+    BG_GREEN = "\033[42m"
+    BG_YELLOW = "\033[43m"
+    BG_BLUE = "\033[44m"
+    BG_VIOLET = "\033[45m"
+    BG_SKY_BLUE = "\033[46m"
+
+    def end(self, message):
+        print(self.BG_VIOLET + message + self.TERMINATOR)
+
+    def info(self, message):
+        message = "[Info] " + message
+        print(self.FONT_SKY_BLUE + message + self.TERMINATOR)
+
+    def warning(self, message):
+        message = "[🔔️] " + message
+        print(self.FONT_YELLOW + message + self.TERMINATOR)
+
+    def error(self, message):
+        message = "[🆘] " + message
+        print(self.FONT_RED + message + self.TERMINATOR)
+
+    def success(self, message):
+        message = "[✅] " + message
+        print(self.FONT_GREEN + message + self.TERMINATOR)
+
+    def title(self, message):
+        message = "[🚀] " + message
+        print(self.BG_GREEN + message + self.TERMINATOR)
+
+
+class MessageBlock(ColorSchema):
+    """
+    屏幕输出的信息块，封装统一样式
+    """
+    TITLE = None
+    START = None
+    END = None
 
     def __init__(self):
-        self.hint('[^_^] Hi Man, Welcome to STAR: https://github.com/pyfs/cc_django')
+        if self.TITLE:
+            self.title(message=self.TITLE)
+        if self.START:
+            self.info(message=self.START)
+        self.action()
+        if self.END:
+            self.end(message=self.END)
 
-    def info(self, content):
-        print(self.INFO + content + self.TERMINATOR)
+    def action(self):
+        pass
 
-    def warning(self, content):
-        print(self.WARNING + content + self.TERMINATOR)
-
-    def hint(self, content):
-        print(self.HINT + content + self.TERMINATOR)
-
-    def success(self, content):
-        print(self.SUCCESS + content + self.TERMINATOR)
-
-    def __del__(self):
-        self.hint('[!] Well Done, enjoy coding now !')
+    @staticmethod
+    def decode_output(output):
+        """
+        decode check_output from byte to utf-8
+        @param output: subprocess check_output result
+        """
+        return output.decode('utf-8').strip().strip('\n')
 
 
-class PreGenProjectHooks(GenericHooks):
-    # 流水线功能清单
-    PIPELINE = [
-        'check_project_name',
-        'pyenv_create_virtualenv',
-        'pip_install_requirements',
-        # 'pip_freeze_requirements'
-    ]
+class Welcome(MessageBlock):
+    TITLE = "Hi Man, Glad to see you here, A Github Start is Welcome!"
+    START = ">>> https://github.com/pyfs/cc_django.git <<<"
+    END = "---------------------------------------------------------------------------"
 
-    # 生成项目前的钩子
-    ENV_COMMANDS = [
+    def action(self):
+        print(__doc__)
+
+
+class WellDone(MessageBlock):
+    END = "Congratulations, Well Done Once Again ⛽️⛽️⛽️"
+
+
+class CheckProjectName(MessageBlock):
+    TITLE = "检测项目名称是否合规"
+
+    def action(self):
+        reg = r'^[_a-zA-Z][_a-zA-Z0-9]+$'
+        project_name = '{{ cookiecutter.project_name }}'
+        if not re.match(reg, project_name):
+            self.error(' The project name(%s) invalid, use _ instead of -' % project_name)
+            sys.exit(1)
+
+
+class CheckPyenvInstalled(MessageBlock):
+    TITLE = "检测 pyenv 是否安装"
+
+    def action(self):
+        cmd = "pyenv --version"
+        if subprocess.check_call(cmd, shell=True):
+            self.error("pyenv seems not installed!")
+            sys.exit(1)
+
+
+class CheckPythonVersion(MessageBlock):
+    TITLE = "检测 python 版本 {{cookiecutter.python_version}} 是否安装"
+
+    def action(self):
+        cmd = "pyenv versions | grep -v {{cookiecutter.python_version}}/ | grep {{cookiecutter.python_version}}"
+        py = subprocess.check_output(cmd, shell=True)
+        if self.decode_output(py) != "{{cookiecutter.python_version}}":
+            self.error("python==={{cookiecutter.python_version}} not installed")
+            sys.exit(1)
+        self.info(self.decode_output(py))
+
+
+class PyenvCreateVirtualenv(MessageBlock):
+    TITLE = "用项目名创建虚拟环境"
+
+    # 创建虚拟环境命令
+    VENV_CREATE_CMD = [
         'pyenv virtualenv {{cookiecutter.python_version}} {{cookiecutter.project_name}}',
         'pyenv local {{cookiecutter.project_name}}',
-        'pip install --upgrade pip'
     ]
 
-    # 依赖关系
+    def action(self):
+        cmd = 'pyenv versions --skip-aliases'
+        versions = subprocess.check_output(cmd, shell=True)
+        version_map = map(lambda x: x.strip(), versions.decode('utf-8').split('\n'))
+        if "{{cookiecutter.python_version}}/envs/{{cookiecutter.project_name}}" not in version_map:
+            self.warning("虚拟环境 {{cookiecutter.project_name}} 未曾创建，现在创建 ...")
+            self.create_venv()
+
+    def create_venv(self):
+        for line in self.VENV_CREATE_CMD:
+            self.success('[!] %s' % line)
+            subprocess.check_call(line, shell=True)
+
+
+class PipInstallRequirements(MessageBlock):
+    TITLE = "安装项目 python 依赖包"
     REQUIREMENTS = {
         'default': {
             'input': 'Y',
@@ -55,22 +171,24 @@ class PreGenProjectHooks(GenericHooks):
                 'Pillow',
                 'django-model-utils',
                 'psycopg2-binary',
-                'uWSGI'
+                'uWSGI',
+                'django-filter',
+                'markdown',
+                'django-extensions',
+                'drf-extensions',
+                'djangorestframework',
+                'djangorestframework-jwt',
+                'django-grappelli',
+                'django-filebrowser',
+                'feedparser'
             ],
         },
         'celery': {
             'input': '{{cookiecutter.use_celery}}',
             'pkg': [
                 'django-celery-beat',
-                'celery'
-            ],
-        },
-        'grappelli': {
-            'input': '{{cookiecutter.use_grappelli}}',
-            'pkg': [
-                'django-grappelli',
-                'django-filebrowser',
-                'feedparser'
+                'celery',
+                'amqp',
             ],
         },
         'mdeditor': {
@@ -86,15 +204,6 @@ class PreGenProjectHooks(GenericHooks):
                 'django-taggit-serializer'
             ]
         },
-        'drf': {
-            'input': '{{cookiecutter.use_drf}}',
-            'pkg': [
-                'djangorestframework',
-                'djangorestframework-jwt',
-                'django-filter',
-                'markdown',
-            ]
-        },
         'demo': {
             'input': '{{cookiecutter.use_demo}}',
             'pkg': [
@@ -107,45 +216,51 @@ class PreGenProjectHooks(GenericHooks):
         }
     }
 
-    @staticmethod
-    def check_project_name():
-        """检查项目名称是否合规"""
-        module_reg = r'^[_a-zA-Z][_a-zA-Z0-9]+$'
-        module_name = '{{ cookiecutter.project_name }}'
-        if not re.match(module_reg, module_name):
-            print('ERROR: The project name(%s) invalid Python module name. use _ instead of -' % module_name)
-            sys.exit(1)
-
-    def pyenv_create_virtualenv(self):
-        """使用 pyenv 创建虚拟环境"""
-        self.info('[!] pyenv 创建虚拟环境')
-        for cmd in self.ENV_COMMANDS:
-            self.success('[!] %s' % cmd)
-            check_call(cmd.split())
-
-    def pip_install_requirements(self):
-        """按需安装依赖包"""
-        self.warning('[!] requirements check list')
+    def action(self):
         requirements = []
         for key, item in self.REQUIREMENTS.items():
             if item['input'].strip().lower() == 'y':
                 requirements += item['pkg']
-                self.success('[!] %s requires: %s' % (key, ', '.join(item['pkg'])))
         self.warning('[!] installing ...')
         cmd = ['pip', 'install'] + requirements
-        check_call(cmd)
+        subprocess.check_call(cmd)
 
-    def pip_freeze_requirements(self):
-        """pip freeze 无效，已知 BUG"""
+
+class PipFreezeRequirements(MessageBlock):
+    TITLE = "更新项目依赖到 requirements.txt 文件"
+
+    def action(self):
+        """
+        自动更新项目依赖文件
+        """
         self.warning('[!] freezing requirements ...')
-        cmd = ['pip', 'freeze', '>', 'requirements.txt']
-        check_call(cmd)
+        cmd = 'pip freeze'
+        result = subprocess.run(cmd, shell=True, capture_output=True)
+        if result.returncode:
+            self.warning(result.stderr.decode('utf-8'))
+        with open('requirements.txt', 'w') as f:
+            f.write(result.stdout.decode('utf-8'))
+
+
+class PreGenProjectHooks(object):
+    PIPELINE = [
+        'Welcome',
+        'CheckProjectName',
+        'CheckPyenvInstalled',
+        'CheckPythonVersion',
+        'PyenvCreateVirtualenv',
+        'PipInstallRequirements',
+        'PipFreezeRequirements',
+        'WellDone',
+    ]
+
+    def __call__(self):
+        for cls_name in self.PIPELINE:
+            try:
+                eval(cls_name)()
+            except KeyError:
+                print("PreGenProjectHooks has got no Attribute: %s" % cls_name)
 
 
 if __name__ == '__main__':
-    hooks = PreGenProjectHooks()
-    for attribute in hooks.PIPELINE:
-        try:
-            getattr(hooks, attribute)()
-        except AttributeError:
-            print("PreGenProjectHooks has got no Attribute: %s" % attribute)
+    PreGenProjectHooks()()

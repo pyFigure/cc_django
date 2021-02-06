@@ -1,0 +1,2 @@
+PIP_INDEX_URL=https://artifactory.gz.cvte.cn/artifactory/api/pypi/pypi-remote/simple
+UPGRADE_PIP_TO_LATEST=True

@@ -15,23 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-{%- if cookiecutter.use_grappelli.lower() == 'y' %}
 from filebrowser.sites import site
-{%- endif %}
 from django.conf import settings
 from django.conf.urls.static import static
 
 # 系统及第三方依赖路由
 urlpatterns = [
-    {%- if cookiecutter.use_drf.lower() == 'y' %}
     path('api-auth/', include('rest_framework.urls')),
-    {%- endif %}
-    {%- if cookiecutter.use_grappelli.lower() == 'y' %}
     path('admin/filebrowser/', site.urls),
-    {%- endif %}
-    {%- if cookiecutter.use_grappelli.lower() == 'y' %}
     path('grappelli/', include('grappelli.urls')),
-    {%- endif %}
     path('admin/', admin.site.urls),
     {%- if cookiecutter.use_mdeditor.lower() == 'y' %}
     path('mdeditor/', include('mdeditor.urls')),
@@ -40,9 +32,7 @@ urlpatterns = [
 
 # 自研 APP 路由
 urlpatterns += [
-    {%- if cookiecutter.use_account.lower() == 'y' %}
     path('<version>/account/', include('account.urls')),
-    {%- endif %}
     {%- if cookiecutter.use_demo.lower() == 'y' %}
     path('<version>/demo/', include('project.urls')),
     {%- endif %}

@@ -31,6 +31,7 @@ class User(UUIDModel, SoftDeletableModel, AbstractUser):
     """自定义用户模型"""
     # 必填字段
     username = models.CharField(verbose_name='用户', max_length=40, unique=True)
+    cn_name = models.CharField(verbose_name='中文名', max_length=20, blank=True, null=True)
 
     # 选填字段
     # 第三方登录创建账号时无需密码
