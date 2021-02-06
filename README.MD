@@ -1,6 +1,7 @@
-![image](https://github.com/pyfs/cc_django/blob/master/images/installing.jpg)
+![image](https://github.com/pyfs/cc_django/blob/master/images/installing-1.png)
+![image](https://github.com/pyfs/cc_django/blob/master/images/installing-2.png)
 
-生成 Django 项目的 Cookiecutter 模板
+## 生成 Django 项目的 Cookiecutter 模板
 
 # 项目支持
 
