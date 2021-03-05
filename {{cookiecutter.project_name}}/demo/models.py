@@ -1,10 +1,8 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from model_utils.models import TimeStampedModel, SoftDeletableModel, UUIDModel
-from taggit.managers import TaggableManager
 from django.conf import settings
 from utils.common.models import OwnerModel
-from utils.taggit.models import TaggedUUIDItem
 
 
 # Create your models here.
@@ -17,8 +15,6 @@ class Project(MPTTModel, UUIDModel, OwnerModel, SoftDeletableModel, TimeStampedM
     pic = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='责任人', on_delete=models.CASCADE,
                             related_name='charged_project')
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name='成员', related_name='belong_to_project')
-
-    tags = TaggableManager(through=TaggedUUIDItem, blank=True)
 
     class MPTTMeta:
         order_insertion_by = ['name']
