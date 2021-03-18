@@ -37,7 +37,7 @@ class S2iCCH(GenericCCHooks):
 
 
 class DemoCCH(GenericCCHooks):
-    dir_path_list = ['demo']
+    dir_path_list = ['project']
 
 
 if __name__ == "__main__":

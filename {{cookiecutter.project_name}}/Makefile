@@ -6,5 +6,5 @@ clean:
 	{%- endif %}
 install:
 	pip freeze > requirements.txt
-	python manage.py makemigrations
+	python manage.py makemigrations account project
 	python manage.py migrate

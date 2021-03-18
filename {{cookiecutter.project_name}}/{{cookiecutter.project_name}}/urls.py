@@ -34,7 +34,7 @@ urlpatterns = [
 urlpatterns += [
     path('<version>/account/', include('account.urls')),
     {%- if cookiecutter.use_demo.lower() == 'y' %}
-    path('<version>/demo/', include('project.urls')),
+    path('<version>/project/', include('project.urls')),
     {%- endif %}
 ]
 

@@ -30,7 +30,7 @@ class CustomIndexDashboard(Dashboard):
             models=[
                 'account.models.User',
                 {%- if cookiecutter.use_demo.lower() == 'y' %}
-                'demo.models.Project',
+                'project.models.Project',
                 {%- endif %}
             ]
         ))

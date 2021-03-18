@@ -60,7 +60,7 @@ INSTALLED_APPS += [
     # 自研应用
     'account.apps.AccountConfig',
     {%- if cookiecutter.use_demo.lower() == 'y' %}
-    'demo.apps.ProjectConfig',
+    'project.apps.ProjectConfig',
     {%- endif %}
 ]
 

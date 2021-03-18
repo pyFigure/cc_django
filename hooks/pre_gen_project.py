@@ -204,7 +204,7 @@ class PipInstallRequirements(MessageBlock):
                 'django-taggit-serializer'
             ]
         },
-        'demo': {
+        'project': {
             'input': '{{cookiecutter.use_demo}}',
             'pkg': [
                 'djangorestframework',
