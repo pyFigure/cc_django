@@ -12,7 +12,7 @@ $$       |$$       |      $$    $$ |    $$ |$$    $$ |$$ |  $$ |$$    $$ |$$    
                                   $$    $$/                     $$    $$/
                                    $$$$$$/                       $$$$$$/
 """
-
+import os
 import re
 import subprocess
 import sys
@@ -101,7 +101,7 @@ class Welcome(MessageBlock):
 
 
 class WellDone(MessageBlock):
-    END = "Congratulations, Well Done Once Again ⛽️⛽️⛽️"
+    END = "Congratulations, Well Done Once Again ⛽️⛽️⛽️ \nlast operation execute: make install."
 
 
 class CheckProjectName(MessageBlock):
@@ -166,7 +166,7 @@ class PipInstallRequirements(MessageBlock):
         'default': {
             'input': 'Y',
             'pkg': [
-                'Django==2.2.14',
+                'Django==3.1.7',
                 'wrapt',
                 'Pillow',
                 'django-model-utils',
@@ -238,8 +238,11 @@ class PipFreezeRequirements(MessageBlock):
         result = subprocess.run(cmd, shell=True, capture_output=True)
         if result.returncode:
             self.warning(result.stderr.decode('utf-8'))
-        with open('requirements.txt', 'w') as f:
-            f.write(result.stdout.decode('utf-8'))
+        # with open('requirements.txt', 'w+') as f:
+        #     f.write(result.stdout.decode('utf-8'))
+        f = open('requirements.txt', 'w+')
+        f.write(result.stdout.decode('utf-8'))
+        f.close()
 
 
 class PreGenProjectHooks(object):
@@ -264,3 +267,4 @@ class PreGenProjectHooks(object):
 
 if __name__ == '__main__':
     PreGenProjectHooks()()
+

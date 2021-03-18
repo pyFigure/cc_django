@@ -1,7 +1,7 @@
 {
   "project_name": "cc_django",
   "maintainer": "peizhenfei",
-  "email": "{{ cookiecutter.maintainer.lower()|replace(' ', '-') }}@cvte.com",
+  "email": "{{ cookiecutter.maintainer.lower()|replace(' ', '-') }}@cc-django.com",
   "python_version": "3.7.5",
   "use_celery": "Y",
   "use_mdeditor": "Y",

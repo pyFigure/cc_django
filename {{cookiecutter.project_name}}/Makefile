@@ -4,3 +4,7 @@ clean:
 	{%- if cookiecutter.use_demo.lower() == 'y' %}
 	rm -rf demo/migrations
 	{%- endif %}
+install:
+	pip freeze > requirements.txt
+	python manage.py makemigrations
+	python manage.py migrate

@@ -43,7 +43,7 @@ Pyenv插件: [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
 
 ```shell script
 
-cookiecutter https://github.com/pyFigure/cc_django
+cookiecutter https://github.com/pyfs/cc_django
 
 ```
 
