@@ -18,25 +18,53 @@ from django.urls import path, include
 from filebrowser.sites import site
 from django.conf import settings
 from django.conf.urls.static import static
+{%- if cookiecutter.use_swagger.lower() == 'y' %}
+from drf_yasg2 import openapi
+from drf_yasg2.views import get_schema_view
+from rest_framework import permissions
+from OpenAPI.swager import CustomOpenAPISchemaGenerator
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="infra OPEN api",
+        default_version='v1.0.0',
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+    generator_class=CustomOpenAPISchemaGenerator
+)
+{%- endif %}
 
 # 系统及第三方依赖路由
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
-    path('admin/', admin.site.urls),
     {%- if cookiecutter.use_mdeditor.lower() == 'y' %}
     path('mdeditor/', include('mdeditor.urls')),
     {%- endif %}
+    {%- if cookiecutter.use_sphinx.lower() == 'y' %}
+    path('docs/', include('docs.urls')),
+    {%- endif %}
+    path('admin/', admin.site.urls)
 ]
 
 # 自研 APP 路由
 urlpatterns += [
     path('<version>/account/', include('account.urls')),
     {%- if cookiecutter.use_demo.lower() == 'y' %}
-    path('<version>/project/', include('project.urls')),
+    path('demo/<version>/', include('demo.urls')),
     {%- endif %}
 ]
+
+{%- if cookiecutter.use_swagger.lower() == 'y' %}
+# api & doc
+urlpatterns += [
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+]
+{%- endif %}
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

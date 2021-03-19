@@ -1,11 +1,14 @@
 {
   "project_name": "cc_django",
   "maintainer": "peizhenfei",
-  "email": "{{ cookiecutter.maintainer.lower()|replace(' ', '-') }}@cc-django.com",
-  "python_version": "3.7.5",
+  "email": "{{cookiecutter.maintainer.lower()|replace(' ', '-')}}@cvte.com",
+  "python_version": "3.8.8",
+  "django_version": "2.2.10",
   "use_celery": "Y",
-  "use_mdeditor": "Y",
-  "use_taggit": "Y",
   "use_s2i": "Y",
-  "use_demo": "Y"
+  "use_swagger": "n",
+  "use_sphinx": "n",
+  "use_mdeditor": "n",
+  "use_taggit": "n",
+  "use_demo": "n"
 }

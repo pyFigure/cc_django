@@ -12,7 +12,6 @@ $$       |$$       |      $$    $$ |    $$ |$$    $$ |$$ |  $$ |$$    $$ |$$    
                                   $$    $$/                     $$    $$/
                                    $$$$$$/                       $$$$$$/
 """
-import os
 import re
 import subprocess
 import sys
@@ -166,14 +165,13 @@ class PipInstallRequirements(MessageBlock):
         'default': {
             'input': 'Y',
             'pkg': [
-                'Django==3.1.7',
+                'Django=={{cookiecutter.python_version}}',
                 'wrapt',
                 'Pillow',
                 'django-model-utils',
                 'psycopg2-binary',
                 'uWSGI',
                 'django-filter',
-                'markdown',
                 'django-extensions',
                 'drf-extensions',
                 'djangorestframework',
@@ -204,14 +202,24 @@ class PipInstallRequirements(MessageBlock):
                 'django-taggit-serializer'
             ]
         },
-        'project': {
+        'swagger': {
+            'input': '{{cookiecutter.use_swagger}}',
+            'pkg': [
+                'drf-yasg2'
+            ]
+        },
+        'sphinx': {
+            'input': '{{cookiecutter.use_sphinx}}',
+            'pkg': [
+                'Sphinx',
+                'sphinx-autobuild',
+                'sphinx-rtd-theme'
+            ]
+        },
+        'demo': {
             'input': '{{cookiecutter.use_demo}}',
             'pkg': [
-                'djangorestframework',
-                'django-mptt',
-                'djangorestframework-recursive',
-                'django-taggit',
-                'django-taggit-serializer'
+                'jsonschema',
             ]
         }
     }
@@ -238,11 +246,8 @@ class PipFreezeRequirements(MessageBlock):
         result = subprocess.run(cmd, shell=True, capture_output=True)
         if result.returncode:
             self.warning(result.stderr.decode('utf-8'))
-        # with open('requirements.txt', 'w+') as f:
-        #     f.write(result.stdout.decode('utf-8'))
-        f = open('requirements.txt', 'w+')
-        f.write(result.stdout.decode('utf-8'))
-        f.close()
+        with open('./requirements.txt', 'w+') as f:
+            f.write(result.stdout.decode('utf-8'))
 
 
 class PreGenProjectHooks(object):
@@ -267,4 +272,3 @@ class PreGenProjectHooks(object):
 
 if __name__ == '__main__':
     PreGenProjectHooks()()
-

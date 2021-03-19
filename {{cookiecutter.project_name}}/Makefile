@@ -4,7 +4,13 @@ clean:
 	{%- if cookiecutter.use_demo.lower() == 'y' %}
 	rm -rf demo/migrations
 	{%- endif %}
-install:
+freeze:
 	pip freeze > requirements.txt
-	python manage.py makemigrations account project
+superuser:
+	python manage.py createsuperuser
+make:
+	python manage.py makemigrations account
+	{%- if cookiecutter.use_demo.lower() == 'y' %}
+	python manage.py makemigrations demo
+	{%- endif %}
 	python manage.py migrate

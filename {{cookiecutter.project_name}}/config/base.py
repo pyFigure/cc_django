@@ -18,10 +18,7 @@ env = Env()
 LANGUAGE_CODE = 'zh-hans'
 TIME_ZONE = 'Asia/Shanghai'
 
-# todo installed app 中少了  mdeditor
-
 # 允许主机
-# todo 生产环境修改为主域名
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -50,17 +47,17 @@ INSTALLED_APPS += [
     {%- if cookiecutter.use_celery.lower() == 'y' %}
     'django_celery_beat',
     {%- endif %}
-    'django.contrib.sites',
-    {%- if cookiecutter.use_demo.lower() == 'y' %}
-    'mptt',
-    {%- endif %}
+    'django.contrib.sites'
 ]
 
 INSTALLED_APPS += [
     # 自研应用
     'account.apps.AccountConfig',
     {%- if cookiecutter.use_demo.lower() == 'y' %}
-    'project.apps.ProjectConfig',
+    'demo.apps.DemoConfig',
+    {%- endif %}
+    {%- if cookiecutter.use_swagger.lower() == 'y' %}
+    'drf_yasg2',
     {%- endif %}
 ]
 
@@ -77,3 +74,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 # media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+{%- if cookiecutter.use_shpinx.lower() == 'y' %}
+DOCS_ROOT = os.path.join(BASE_DIR, 'docs/build/html/')
+
+# public, login_required, staff, superuser
+DOCS_ACCESS = 'public'
+{%- endif %}
+
+
+{%- if cookiecutter.use_celery.lower() == 'y' %}
+CELERY_BROKER_URL = env.get('CELERY_BROKER_URL')
+{%- endif %}
