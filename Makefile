@@ -4,5 +4,5 @@ test:
 	cookiecutter .
 
 clean:
-	rm -rf cc_django
-	pyenv uninstall cc_django
+	rm -rf new_django_project
+	pyenv uninstall new_django_project

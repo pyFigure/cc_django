@@ -1,8 +1,8 @@
 {
-  "project_name": "cc_django",
+  "project_name": "new_django_project",
   "maintainer": "peizhenfei",
   "email": "{{cookiecutter.maintainer.lower()|replace(' ', '-')}}@cvte.com",
-  "python_version": "3.8.8",
+  "python_version": "3.7.5",
   "django_version": "2.2.10",
   "use_celery": "Y",
   "use_s2i": "Y",

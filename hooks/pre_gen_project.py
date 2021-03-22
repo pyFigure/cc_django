@@ -1,16 +1,12 @@
 """
-                                 __
-                                /  |
-  _______   _______         ____$$ |     __   ______   _______    ______    ______
- /       | /       |       /    $$ |    /  | /      \ /       \  /      \  /      \\
-/$$$$$$$/ /$$$$$$$/       /$$$$$$$ |    $$/  $$$$$$  |$$$$$$$  |/$$$$$$  |/$$$$$$  |
-$$ |      $$ |            $$ |  $$ |    /  | /    $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |
-$$ \_____ $$ \_____       $$ \__$$ |    $$ |/$$$$$$$ |$$ |  $$ |$$ \__$$ |$$ \__$$ |
-$$       |$$       |      $$    $$ |    $$ |$$    $$ |$$ |  $$ |$$    $$ |$$    $$/
- $$$$$$$/  $$$$$$$/        $$$$$$$/__   $$ | $$$$$$$/ $$/   $$/  $$$$$$$ | $$$$$$/
-                                  /  \__$$ |                    /  \__$$ |
-                                  $$    $$/                     $$    $$/
-                                   $$$$$$/                       $$$$$$/
+                _ _
+               | (_)
+   ___ ___   __| |_  __ _ _ __   __ _  ___
+  / __/ __| / _` | |/ _` | '_ \ / _` |/ _ \\
+ | (_| (__ | (_| | | (_| | | | | (_| | (_) |
+  \___\___| \__,_| |\__,_|_| |_|\__, |\___/
+        ______  _/ |             __/ |
+       |______||__/             |___/
 """
 import re
 import subprocess
@@ -91,9 +87,9 @@ class MessageBlock(ColorSchema):
 
 
 class Welcome(MessageBlock):
-    TITLE = "Hi Man, Glad to see you here, A Github Start is Welcome!"
+    TITLE = "Hi Man, Glad to see you here, Welcome to Star!"
     START = ">>> https://github.com/pyfs/cc_django.git <<<"
-    END = "---------------------------------------------------------------------------"
+    END = "----------------------------------------------------------"
 
     def action(self):
         print(__doc__)
@@ -165,7 +161,7 @@ class PipInstallRequirements(MessageBlock):
         'default': {
             'input': 'Y',
             'pkg': [
-                'Django=={{cookiecutter.python_version}}',
+                'Django=={{cookiecutter.django_version}}',
                 'wrapt',
                 'Pillow',
                 'django-model-utils',

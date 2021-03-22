@@ -23,9 +23,9 @@ class Demo1(APIView):
     # 隐藏该类提供的所有接口
     # swagger_schema = None
 
-    {% - if cookiecutter.use_swagger.lower() == 'y' %}
+    {%- if cookiecutter.use_swagger.lower() == 'y' %}
     @swagger_auto_schema(query_serializer=DemoSerializer)
-    {% - endif %}
+    {%- endif %}
     def get(self, request, *args, **kwargs) -> Response:
         """
         ## 新增用户的接口
@@ -49,9 +49,9 @@ class Demo1(APIView):
         """
         return Response(data='get demo1', status=status.HTTP_200_OK)
 
-    {% - if cookiecutter.use_swagger.lower() == 'y' %}
+    {%- if cookiecutter.use_swagger.lower() == 'y' %}
     @swagger_auto_schema(request_body=DemoSerializer)
-    {% - endif %}
+    {%- endif %}
     def post(self, request, *args, **kwargs) -> Response:
         """post data from api"""
         return Response(data='post demo1', status=status.HTTP_200_OK)
@@ -66,9 +66,9 @@ class Demo2(APIView):
     authentication_classes = [JSONWebTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    {% - if cookiecutter.use_swagger.lower() == 'y' %}
+    {%- if cookiecutter.use_swagger.lower() == 'y' %}
     @swagger_auto_schema(query_serializer=ApiSerializer)
-    {% - endif %}
+    {%- endif %}
     def post(self, request, *args, **kwargs) -> Response:
         """装饰器参数 auto_schema=None 隐藏单个接口"""
         return Response(data='get demo2', status=status.HTTP_200_OK)
@@ -86,9 +86,9 @@ class Demo3(GenericViewSet):
         return Response(data="create success", status=status.HTTP_200_OK)
 
     @action(methods=['POST'], detail=False)
-    {% - if cookiecutter.use_swagger.lower() == 'y' %}
+    {%- if cookiecutter.use_swagger.lower() == 'y' %}
     @swagger_auto_schema(request_body=LongTimeTaskSerializer)
-    {% - endif %}
+    {%- endif %}
     def exec_long_time_task(self, request, *args, **kwargs):
         """示例: 执行长时间任务"""
         serializer = LongTimeTaskSerializer(data=request.data)
@@ -106,9 +106,9 @@ class Demo4(MultiSerializersMixin, GenericViewSet):
         "create": DemoSerializer
     }
 
-    {% - if cookiecutter.use_swagger.lower() == 'y' %}
+    {%- if cookiecutter.use_swagger.lower() == 'y' %}
     @swagger_auto_schema(deprecated=True)
-    {% - endif %}
+    {%- endif %}
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -125,9 +125,9 @@ class Demo5(ModelViewSet):
     # 隐藏全部 API 有效
     # swagger_schema = None
 
-    {% - if cookiecutter.use_swagger.lower() == 'y' %}
+    {%- if cookiecutter.use_swagger.lower() == 'y' %}
     @swagger_auto_schema(auto_schema=None, deprecated=True)
-    {% - endif %}
+    {%- endif %}
     def delete(self, request, *args, **kwargs) -> Response:
         """
         !!! 在 ModelViewSet 下，隐藏单个 API 无效

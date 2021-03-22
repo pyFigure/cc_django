@@ -75,7 +75,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-{%- if cookiecutter.use_shpinx.lower() == 'y' %}
+{%- if cookiecutter.use_sphinx.lower() == 'y' %}
 DOCS_ROOT = os.path.join(BASE_DIR, 'docs/build/html/')
 
 # public, login_required, staff, superuser
