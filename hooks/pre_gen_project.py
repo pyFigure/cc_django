@@ -126,7 +126,7 @@ class CheckPythonVersion(MessageBlock):
     def action(self):
         cmd = "pyenv versions | grep -v '{{cookiecutter.python_version}}/' | grep '{{cookiecutter.python_version}}'"
         py = subprocess.check_output(cmd, shell=True)
-        if self.decode_output(py) != "{{cookiecutter.python_version}}":
+        if not self.decode_output(py).startswith("{{cookiecutter.python_version}}"):
             self.error("python==={{cookiecutter.python_version}} not installed")
             sys.exit(1)
         self.info(self.decode_output(py))
